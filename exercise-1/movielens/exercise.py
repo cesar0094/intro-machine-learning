@@ -47,31 +47,17 @@ class Exercise(object):
         elif movie_a_id not in self.movie_to_ratings or movie_b_id not in self.movie_to_ratings:
             return 0.0
 
-        user_intersection = self.get_common_users(movie_a_id, movie_b_id)
-        user_junction = self.get_all_users(movie_a_id, movie_b_id)
+        user_intersection = self.get_intersection_of_users(movie_a_id, movie_b_id)
+        user_junction = self.get_union_of_users(movie_a_id, movie_b_id)
 
         return float(len(user_intersection)) / len(user_junction)
 
-    def get_all_users(self, movie_a_id, movie_b_id):
-        users = set()
+    def get_union_of_users(self, movie_a_id, movie_b_id):
+        return self.get_users_from_ratings(self.movie_to_ratings[movie_a_id]).union(self.get_users_from_ratings(self.movie_to_ratings[movie_b_id]))
 
-        for rating in self.movie_to_ratings[movie_a_id]:
-            users.add(rating[0])
+    def get_intersection_of_users(self, movie_a_id, movie_b_id):
+        return self.get_users_from_ratings(self.movie_to_ratings[movie_a_id]).intersection(self.get_users_from_ratings(self.movie_to_ratings[movie_b_id]))
 
-        for rating in self.movie_to_ratings[movie_b_id]:
-            users.add(rating[0])
+    def get_users_from_ratings(self, ratings):
+        return set([rating[0] for rating in ratings])
 
-        return users
-
-    def get_common_users(self, movie_a_id, movie_b_id):
-        movie_a_users = set()
-        users = set()
-
-        for rating in self.movie_to_ratings[movie_a_id]:
-            movie_a_users.add(rating[0])
-
-        for rating in self.movie_to_ratings[movie_b_id]:
-            if rating[0] in movie_a_users:
-                users.add(rating[0])
-
-        return users
