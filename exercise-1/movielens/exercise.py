@@ -87,8 +87,8 @@ class Exercise(object):
                 ratings_users_b.append(rating)
 
         # we have both rating arrays, now sort them by movie ID so ratings match 1:1
-        sorted(ratings_users_a, key=lambda x: x[1])
-        sorted(ratings_users_b, key=lambda x: x[1])
+        ratings_users_a = sorted(ratings_users_a, key=lambda x: x[1])
+        ratings_users_b = sorted(ratings_users_b, key=lambda x: x[1])
         ratings_a = [r[2] for r in ratings_users_a]
         ratings_b = [r[2] for r in ratings_users_b]
 
