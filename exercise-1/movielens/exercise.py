@@ -1,4 +1,5 @@
 from collections import defaultdict
+import math
 
 import numpy
 
@@ -54,6 +55,21 @@ class Exercise(object):
 
         return float(len(user_intersection)) / len(user_junction)
 
+    def get_all_jacobian_coefficients_from_movie(self, movie_id):
+        """
+        :return:
+        coefficients: array of tuples (movie_id, jacobian coeff)
+        """
+        if not movie_id or movie_id not in self.movie_to_ratings:
+            return []
+
+        coefficients = []
+        for item_id in self.item_ids:
+            coeff = self.get_jacobian_coefficient_from_ids(movie_id, item_id)
+            coefficients.append((item_id, coeff))
+
+        return coefficients
+
     def get_correlation_coefficient_from_titles(self, title_a, title_b):
         movie_a_ids = loadmovielens.give_me_movie_id(title_a, self.items_dictionary)
         movie_b_ids = loadmovielens.give_me_movie_id(title_b, self.items_dictionary)
@@ -92,7 +108,25 @@ class Exercise(object):
         ratings_a = [r[2] for r in ratings_users_a]
         ratings_b = [r[2] for r in ratings_users_b]
 
-        return numpy.corrcoef(ratings_a, ratings_b)[0][1]
+        matrix = numpy.corrcoef(ratings_a, ratings_b)
+        if len(matrix) == 0 or math.isnan(matrix[0][1]):
+            return 0.0
+        return matrix[0][1]
+
+    def get_all_correlation_coefficients_from_movie(self, movie_id):
+        """
+        :return:
+        coefficients: array of tuples (movie_id, jacobian coeff)
+        """
+        if not movie_id or movie_id not in self.movie_to_ratings:
+            return []
+
+        coefficients = []
+        for item_id in self.item_ids:
+            coeff = self.get_correlation_coefficient_from_ids(movie_id, item_id)
+            coefficients.append((item_id, coeff))
+
+        return coefficients
 
     def get_union_of_users(self, movie_a_id, movie_b_id):
         return self.get_users_from_ratings(self.movie_to_ratings[movie_a_id]).union(self.get_users_from_ratings(self.movie_to_ratings[movie_b_id]))
@@ -103,3 +137,5 @@ class Exercise(object):
     def get_users_from_ratings(self, ratings):
         return set([rating[0] for rating in ratings])
 
+    def get_movie_title_from_id(self, movie_id):
+        return self.movie_names[movie_id - 1]
