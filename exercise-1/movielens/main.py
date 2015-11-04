@@ -43,7 +43,9 @@ def Correlation_Coefficient(movie_id_1, movie_id_2):
     :return: (float) Correlation_Coefficient regarding these movies based on the given movie IDs.
             ROUND OFF TO THREE DECIMAL DIGITS
     """
-    return 0.0
+    coefficient = e.get_correlation_coefficient_from_ids(movie_id_1, movie_id_2)
+    d = decimal.Decimal(coefficient)
+    return round(d, 3)
 
 
 def main():
