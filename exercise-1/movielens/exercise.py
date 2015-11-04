@@ -26,7 +26,7 @@ class Exercise(object):
 
         return movie_to_ratings
 
-    def get_jacobian_coefficient_from_titles(self, title_a, title_b):
+    def get_jaccard_coefficient_from_titles(self, title_a, title_b):
         movie_a_ids = loadmovielens.give_me_movie_id(title_a, self.items_dictionary)
         movie_b_ids = loadmovielens.give_me_movie_id(title_b, self.items_dictionary)
 
@@ -35,9 +35,9 @@ class Exercise(object):
         if len(movie_a_ids) > 1 or len(movie_b_ids) > 1:
             exit("Ambigous search titles")
 
-        return self.get_jacobian_coefficient_from_ids(movie_a_ids[0][0], movie_b_ids[0][0])
+        return self.get_jaccard_coefficient_from_ids(movie_a_ids[0][0], movie_b_ids[0][0])
 
-    def get_jacobian_coefficient_from_ids(self, movie_a_id, movie_b_id):
+    def get_jaccard_coefficient_from_ids(self, movie_a_id, movie_b_id):
         """
         :return:
         ratio: the number of users who rated both movies divided by the number of users who rated at least one of the movies.
@@ -55,17 +55,17 @@ class Exercise(object):
 
         return float(len(user_intersection)) / len(user_junction)
 
-    def get_all_jacobian_coefficients_from_movie(self, movie_id):
+    def get_all_jaccard_coefficients_from_movie(self, movie_id):
         """
         :return:
-        coefficients: array of tuples (movie_id, jacobian coeff)
+        coefficients: array of tuples (movie_id, jaccard coeff)
         """
         if not movie_id or movie_id not in self.movie_to_ratings:
             return []
 
         coefficients = []
         for item_id in self.item_ids:
-            coeff = self.get_jacobian_coefficient_from_ids(movie_id, item_id)
+            coeff = self.get_jaccard_coefficient_from_ids(movie_id, item_id)
             coefficients.append((item_id, coeff))
 
         return coefficients
@@ -116,7 +116,7 @@ class Exercise(object):
     def get_all_correlation_coefficients_from_movie(self, movie_id):
         """
         :return:
-        coefficients: array of tuples (movie_id, jacobian coeff)
+        coefficients: array of tuples (movie_id, jaccard coeff)
         """
         if not movie_id or movie_id not in self.movie_to_ratings:
             return []
