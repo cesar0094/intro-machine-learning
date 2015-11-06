@@ -13,8 +13,6 @@ student_ID = '014632888'
 
 
 "load the data into python"
-ratings, movie_dictionary, user_ids, item_ids, movie_names = reader.read_movie_lens_data()
-
 e = exercise.Exercise()
 
 def my_info():
