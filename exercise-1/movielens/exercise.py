@@ -65,6 +65,8 @@ class Exercise(object):
 
         coefficients = []
         for item_id in self.item_ids:
+            if item_id == movie_id: continue
+
             coeff = self.get_jaccard_coefficient_from_ids(movie_id, item_id)
             coefficients.append((item_id, coeff))
 
@@ -90,8 +92,12 @@ class Exercise(object):
             return 0.0
 
         user_intersection = self.get_intersection_of_users(movie_a_id, movie_b_id)
-        ratings_users_a = []
 
+        # using the magic number 30 for minimum of users both movies share
+        if len(user_intersection) < 30:
+            return 0.0
+
+        ratings_users_a = []
         for rating in self.movie_to_ratings[movie_a_id]:
             if rating[0] in user_intersection:
                 ratings_users_a.append(rating)
@@ -101,10 +107,6 @@ class Exercise(object):
         for rating in self.movie_to_ratings[movie_b_id]:
             if rating[0] in user_intersection:
                 ratings_users_b.append(rating)
-
-        # using the magic number 30 for minimum of users both movies share
-        if len(user_intersection) < 30:
-            return 0.0
 
         # we have both rating arrays, now sort them by movie ID so ratings match 1:1
         ratings_users_a = sorted(ratings_users_a, key=lambda x: x[1])
