@@ -61,8 +61,7 @@ test_set = test_y_0 + test_y_1 # first 2000 are y=0, last 2000 are y=1
 
 true_labels = [0] * TEST_SIZE + [1] * TEST_SIZE
 
-# ks = [1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 57]
-ks = [3]
+ks = [1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 57]
 
 predicted = []
 for k in ks:
