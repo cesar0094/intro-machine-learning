@@ -14,7 +14,7 @@ mu_1 = 0
 TEST_SIZE = 2000
 TRAINING_SIZE = 500
 
-""" PART B """
+""" PART A """
 
 rand_y = random.random_integers(0, 1, TRAINING_SIZE)
 
@@ -38,7 +38,7 @@ plt.axis([-15, 15, -15, 15])
 plt.show()
 plt.close() # clear previous figure
 
-""" PART C """
+""" PART B """
 
 rand_y = random.random_integers(0, 1, TEST_SIZE)
 
@@ -62,7 +62,7 @@ plt.axis([-15, 15, -15, 15])
 plt.show()
 plt.close() # clear previous figure
 
-""" PART D """
+""" PART C """
 
 training_y_0 = [(training_y_0_x_1[i], training_y_0_x_2[i]) for i in range(len(training_y_0_x_1))]
 training_y_1 = [(training_y_1_x_1[i], training_y_1_x_2[i]) for i in range(len(training_y_1_x_1))]
@@ -92,6 +92,8 @@ for k in ks:
 
 test_error, = plt.plot(ks, errors, 'ro-', label='Test')
 
+""" PART D """
+
 errors = []
 for k in ks:
     predicted = []
@@ -105,6 +107,8 @@ for k in ks:
 
     matrix = confusion_matrix(true_training_labels, predicted)
     errors.append(float(matrix[0][1] + matrix[1][0]) / len(true_training_labels))
+
+""" PART E """
 
 bayes_error = [.155] * len(ks)
 plt.plot(ks, bayes_error, 'g-', label="Bayes")
