@@ -11,6 +11,11 @@ K = 10
 def fit_func(x, *args):
     return sum(a * x ** i for i, a in enumerate(args))
 
+def calculate_coefficient_of_determination(x, y, f, weights):
+    top = sum([ (y[i] - fit_func(x_i, *weights))**2 for i, x_i in enumerate(x) ])
+    down = sum([ (y[i] - y_mean)**2 for i, x_i in enumerate(x) ])
+    return 1 - top/down
+
 x = random.uniform(-3, 3, NUM_SAMPLES)
 f_x = lambda x: 2 + x - 0.5 * x**2
 
@@ -25,13 +30,9 @@ x_aprox = numpy.arange(-3, 3, 0.2)
 for k in range(1, K+2):
 
     x0 = numpy.ones(k)
-    values, cov_matrix = optimize.curve_fit(fit_func, x, y, x0)
-    y_aprox = [fit_func(i, *values) for i in x_aprox]
-
-    top = sum([ (y[i] - fit_func(x_i, *values))**2 for i, x_i in enumerate(x) ])
-    down = sum([ (y[i] - y_mean)**2 for i, x_i in enumerate(x) ])
-
-    r_sqrd = 1 - top/down
+    weights, cov_matrix = optimize.curve_fit(fit_func, x, y, x0)
+    y_aprox = [fit_func(i, *weights) for i in x_aprox]
+    r_sqrd = calculate_coefficient_of_determination(x, y, fit_func, weights)
     print "R^2:", r_sqrd
 
     plt.plot(x, y, 'bo')
