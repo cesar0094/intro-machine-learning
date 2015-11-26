@@ -26,6 +26,7 @@ y = [ f_x(x[i]) + error[i] for i in range(NUM_SAMPLES) ]
 y_mean = numpy.mean(y)
 
 x_aprox = numpy.arange(-3, 3, 0.2)
+coefficients_of_determination = []
 
 for k in range(1, K+2):
 
@@ -34,11 +35,15 @@ for k in range(1, K+2):
     y_aprox = [fit_func(i, *weights) for i in x_aprox]
     r_sqrd = calculate_coefficient_of_determination(x, y, fit_func, weights)
     print "R^2:", r_sqrd
-
+    coefficients_of_determination.append(r_sqrd)
     plt.plot(x, y, 'bo')
     plt.plot(x_aprox, y_aprox, 'gx')
     plt.show()
     plt.close()
+
+plt.plot(coefficients_of_determination, color='blue', lw=2)
+plt.show()
+plt.close()
 
 n_partitions = int(math.ceil(NUM_SAMPLES/float(FOLD_SIZE)))
 
