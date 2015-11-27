@@ -12,8 +12,9 @@ def fit_func(x, *args):
     return sum(a * x ** i for i, a in enumerate(args))
 
 def calculate_coefficient_of_determination(x, y, f, weights):
+    y_mean = numpy.mean(y)
     top = sum([ (y[i] - fit_func(x_i, *weights))**2 for i, x_i in enumerate(x) ])
-    down = sum([ (y[i] - y_mean)**2 for i, x_i in enumerate(x) ])
+    down = sum((y - y_mean)**2)
     return 1 - top/down
 
 x = random.uniform(-3, 3, NUM_SAMPLES)
