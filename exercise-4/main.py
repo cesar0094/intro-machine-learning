@@ -36,14 +36,11 @@ for k in range(1, K+2):
     r_sqrd = calculate_coefficient_of_determination(x, y, fit_func, weights)
     print "R^2:", r_sqrd
     coefficients_of_determination.append(r_sqrd)
+    plt.title("R^2: " + str(r_sqrd))
     plt.plot(x, y, 'bo')
     plt.plot(x_aprox, y_aprox, 'gx')
     plt.show()
     plt.close()
-
-plt.plot(coefficients_of_determination, color='blue', lw=2)
-plt.show()
-plt.close()
 
 n_partitions = int(math.ceil(NUM_SAMPLES/float(FOLD_SIZE)))
 
@@ -68,5 +65,7 @@ for k in range(1, K+2):
     error_sums.append(error_sum)
 
 plt.plot(error_sums, color='blue', lw=2)
+plt.xlabel('K')
+plt.ylabel('Square Error Sum')
 plt.yscale('log')
 plt.show()
