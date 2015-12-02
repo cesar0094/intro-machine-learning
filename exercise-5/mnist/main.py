@@ -40,11 +40,9 @@ def predict_all_vs_all_label(x, W):
 def calculate_label(x, w):
     return numpy.sign(numpy.dot(x, w))
 
-""" One vs. All """
+def get_learning_weights(training_set, training_labels, label):
 
-W = [ numpy.zeros(dimensions) for i in range(10) ]
-for label in range(10):
-
+    weights = numpy.zeros(dimensions)
     score = 0
     score_change = True
     top_score = -1
@@ -55,7 +53,7 @@ for label in range(10):
 
         for i, x in enumerate(training_set):
             y_i = 1 if training_labels[i] == label else -1
-            y_hat_i = calculate_label(W[label], x)
+            y_hat_i = calculate_label(weights, x)
 
             if y_i != y_hat_i:
 
@@ -63,18 +61,19 @@ for label in range(10):
                 if score > top_score:
                     score_change = True
                     top_score = score
-                    top_w = numpy.copy(W[label])
+                    top_w = numpy.copy(weights)
 
                 score = 0
-                W[label] = W[label] + y_i * x
+                weights = weights + y_i * x
 
             else:
                 score += 1
 
-    W[label] = top_w
+    return top_w
 
-# since we modify W[i] with top_w several times, we avoid making it a matrix until
-# it is finalized
+""" One vs. All """
+
+W = [ get_learning_weights(training_set, training_labels, label) for label in range(10) ]
 W = numpy.matrix(W)
 
 predicted_labels = [predict_one_vs_all_label(x, W) for x in test_set]
