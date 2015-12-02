@@ -29,12 +29,7 @@ def predict_one_vs_all_label(x, W):
 
 def predict_all_vs_all_label(x, W):
     x = x.transpose()
-
-    sums_j = []
-    for w_i in W:
-        sum_j = numpy.sum(numpy.dot(w_i, x))
-        sums_j.append(sum_j)
-
+    sums_j = [numpy.sum(numpy.dot(w_i, x)) for w_i in W]
     return numpy.argmax(sums_j)
 
 def calculate_label(x, w):
@@ -42,6 +37,7 @@ def calculate_label(x, w):
 
 def get_learning_weights(training_set, training_labels, label):
 
+    dimensions = len(training_set[0])
     weights = numpy.zeros(dimensions)
     score = 0
     score_change = True
