@@ -90,7 +90,10 @@ for i_label in range(10):
         if i_label == j_label:
             continue
 
-
+        # only consider two labels
+        boolean_array = (training_labels == i_label) | (training_labels == j_label)
+        reduced_training_labels = training_labels[boolean_array]
+        reduced_training_set = training_set[boolean_array]
         score = 0
         score_change = True
         top_score = -1
@@ -99,10 +102,6 @@ for i_label in range(10):
         while score_change:
             score_change = False
 
-            # only consider two labels
-            boolean_array = (training_labels == i_label) | (training_labels == j_label)
-            reduced_training_labels = training_labels[boolean_array]
-            reduced_training_set = training_set[boolean_array]
             for i, x in enumerate(reduced_training_set):
                 y_i = 1 if reduced_training_labels[i] == i_label else -1
                 y_hat_i = calculate_label(W[i_label][j_label], x)
