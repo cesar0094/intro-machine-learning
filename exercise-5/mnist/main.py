@@ -23,9 +23,19 @@ dimensions = len(training_set[0])
 # learning rate
 rate = 0.5
 
-def predict_label(x, W):
+def predict_one_vs_all_label(x, W):
     x = numpy.matrix(x).transpose()
     return numpy.argmax(W.dot(x))
+
+def predict_all_vs_all_label(x, W):
+    x = numpy.matrix(x).transpose()
+
+    sums_j = []
+    for w_i in W:
+        sum_j = numpy.sum([numpy.sum(numpy.dot(w_ij, x)) for w_ij in w_i])
+        sums_j.append(sum_j)
+
+    return numpy.argmax(sums_j)
 
 def calculate_label(x, w):
     return numpy.sign(numpy.dot(x, w))
@@ -67,8 +77,56 @@ for label in range(10):
 # it is finalized
 W = numpy.matrix(W)
 
-predicted_labels = [predict_label(x, W) for x in test_set]
+predicted_labels = [predict_one_vs_all_label(x, W) for x in test_set]
 
 matrix = confusion_matrix(test_labels, predicted_labels)
 print "One vs. All"
 print matrix
+
+""" All vs. All """
+W = [ numpy.zeros((10,dimensions)) for i in range(10) ]
+
+for i_label in range(10):
+    for j_label in range(10):
+        if i_label == j_label:
+            continue
+
+
+        score = 0
+        score_change = True
+        top_score = -1
+        top_w = 0
+
+        while score_change:
+            score_change = False
+
+            # only consider two labels
+            boolean_array = (training_labels == i_label) | (training_labels == j_label)
+            reduced_training_labels = training_labels[boolean_array]
+            reduced_training_set = training_set[boolean_array]
+            for i, x in enumerate(reduced_training_set):
+                y_i = 1 if reduced_training_labels[i] == i_label else -1
+                y_hat_i = calculate_label(W[i_label][j_label], x)
+
+                if y_i != y_hat_i:
+
+                    # let's check if it was a good performing W
+                    if score > top_score:
+                        score_change = True
+                        top_score = score
+                        top_w = numpy.copy(W[i_label][j_label])
+
+                    score = 0
+                    W[i_label][j_label] = W[i_label][j_label] + y_i * x
+
+                else:
+                    score += 1
+
+        W[i_label][j_label] = top_w
+
+predicted_labels = [predict_all_vs_all_label(x, W) for x in test_set]
+
+matrix = confusion_matrix(test_labels, predicted_labels)
+print "All vs. All"
+print matrix
+
