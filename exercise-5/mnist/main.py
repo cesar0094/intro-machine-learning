@@ -24,15 +24,15 @@ dimensions = len(training_set[0])
 rate = 0.5
 
 def predict_one_vs_all_label(x, W):
-    x = numpy.matrix(x).transpose()
+    x = x.transpose()
     return numpy.argmax(W.dot(x))
 
 def predict_all_vs_all_label(x, W):
-    x = numpy.matrix(x).transpose()
+    x = x.transpose()
 
     sums_j = []
     for w_i in W:
-        sum_j = numpy.sum([numpy.sum(numpy.dot(w_ij, x)) for w_ij in w_i])
+        sum_j = numpy.sum(numpy.dot(w_i, x))
         sums_j.append(sum_j)
 
     return numpy.argmax(sums_j)
