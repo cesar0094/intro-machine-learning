@@ -18,6 +18,7 @@ test_labels = Y[TRAINING_SIZE: TRAINING_SIZE + TEST_SIZE]
 # adding the bias column
 training_set = numpy.insert(training_set, 0, 1, axis=1)
 test_set = numpy.insert(test_set, 0, 1, axis=1)
+dimensions = len(training_set[0])
 
 # learning rate
 rate = 0.5
