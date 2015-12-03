@@ -7,7 +7,7 @@ import mnist_load_show
 
 TRAINING_SIZE = 30000
 TEST_SIZE = 30000
-NUM_EPOCS = 10000
+NUM_EPOCHS = 10
 
 X, Y = mnist_load_show.read_mnist_training_data()
 
@@ -45,9 +45,9 @@ def get_learning_weights(training_set, training_labels, label):
     score_change = True
     top_score = -1
     top_w = 0
-    epocs = 0
+    epochs = 0
 
-    while score_change and epocs < NUM_EPOCS:
+    while score_change and epochs < NUM_EPOCHS:
         score_change = False
 
         for i, x in enumerate(training_set):
@@ -68,7 +68,7 @@ def get_learning_weights(training_set, training_labels, label):
             else:
                 score += 1
 
-        epocs += 1
+        epochs += 1
 
     return top_w
 
