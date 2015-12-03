@@ -1,11 +1,13 @@
 import numpy
 from numpy import random
 from sklearn.metrics import confusion_matrix
+from sklearn import metrics
 
 import mnist_load_show
 
 TRAINING_SIZE = 30000
 TEST_SIZE = 30000
+NUM_EPOCS = 10000
 
 X, Y = mnist_load_show.read_mnist_training_data()
 
@@ -43,8 +45,9 @@ def get_learning_weights(training_set, training_labels, label):
     score_change = True
     top_score = -1
     top_w = 0
+    epocs = 0
 
-    while score_change:
+    while score_change and epocs < NUM_EPOCS:
         score_change = False
 
         for i, x in enumerate(training_set):
@@ -65,6 +68,8 @@ def get_learning_weights(training_set, training_labels, label):
             else:
                 score += 1
 
+        epocs += 1
+
     return top_w
 
 """ One vs. All """
@@ -77,6 +82,7 @@ predicted_labels = [predict_one_vs_all_label(x, W) for x in test_set]
 matrix = confusion_matrix(test_labels, predicted_labels)
 print "One vs. All"
 print matrix
+print metrics.classification_report(test_labels, predicted_labels)
 
 """ All vs. All """
 W = [ numpy.zeros((10,dimensions)) for i in range(10) ]
@@ -87,7 +93,7 @@ for i_label in range(10):
             continue
 
         # only consider two labels
-        boolean_array = (training_labels == i_label) | (training_labels == j_label)
+        boolean_array = numpy.logical_or(training_labels == i_label, training_labels == j_label)
         reduced_training_labels = training_labels[boolean_array]
         reduced_training_set = training_set[boolean_array]
 
@@ -98,4 +104,4 @@ predicted_labels = [predict_all_vs_all_label(x, W) for x in test_set]
 matrix = confusion_matrix(test_labels, predicted_labels)
 print "All vs. All"
 print matrix
-
+print metrics.classification_report(test_labels, predicted_labels)
