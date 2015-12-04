@@ -82,7 +82,7 @@ predicted_labels = [predict_one_vs_all_label(x, W) for x in test_set]
 matrix = confusion_matrix(test_labels, predicted_labels)
 print "One vs. All"
 print matrix
-print metrics.classification_report(test_labels, predicted_labels)
+print metrics.accuracy_score(test_labels, predicted_labels)
 
 """ All vs. All """
 W = [ numpy.zeros((10,dimensions)) for i in range(10) ]
@@ -96,41 +96,13 @@ for i_label in range(10):
         boolean_array = numpy.logical_or(training_labels == i_label, training_labels == j_label)
         reduced_training_labels = training_labels[boolean_array]
         reduced_training_set = training_set[boolean_array]
-        dimensions = len(training_set[0])
-        weights = numpy.zeros(dimensions)
-        score = 0
-        score_change = True
-        top_score = -1
-        epochs = 0
-
-        while score_change and epochs < NUM_EPOCHS:
-            score_change = False
-
-            for i, x in enumerate(reduced_training_set):
-                y_i = 1 if reduced_training_labels[i] == i_label else -1
-                y_hat_i = calculate_label(W[i_label][j_label], x)
-
-                if y_i != y_hat_i:
-
-                    # let's check if it was a good performing W
-                    if score > top_score:
-                        score_change = True
-                        top_score = score
-
-                    score = 0
-                    error = y_i - y_hat_i
-
-                    W[i_label][j_label] = W[i_label][j_label] + y_i * x
-                    W[j_label][i_label] = W[j_label][i_label] - y_i * x
-
-                else:
-                    score += 1
-
-            epochs += 1
+        wij = get_learning_weights(reduced_training_set, reduced_training_labels, i_label)
+        W[i_label][j_label] = wij
+        W[j_label][i_label] = -1 * wij
 
 predicted_labels = [predict_all_vs_all_label(x, W) for x in test_set]
 
 matrix = confusion_matrix(test_labels, predicted_labels)
 print "All vs. All"
 print matrix
-print metrics.classification_report(test_labels, predicted_labels)
+print metrics.accuracy_score(test_labels, predicted_labels)
