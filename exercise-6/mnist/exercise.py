@@ -40,3 +40,10 @@ cluster_means = k_means(X, cluster_means)
 
 mnist_load_show.visualize(cluster_means)
 
+# select first instance of each label
+cluster_means = [X[np.where(Y == i)[0][0]] for i in range(10)]
+cluster_means = np.array(cluster_means)
+mnist_load_show.visualize(cluster_means)
+
+cluster_means = k_means(X, cluster_means)
+mnist_load_show.visualize(cluster_means)
