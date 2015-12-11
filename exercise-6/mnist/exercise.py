@@ -20,13 +20,13 @@ def k_means(data, means):
     clusters = np.array([ data[cluster_indices == i] for i in range(len(means)) ])
     return np.array(new_means), clusters
 
-def k_mediods(dissimilarity, mediod_indices):
+def k_medoids(dissimilarity, mediod_indices):
 
     changed = True
     mediod_indices = np.array(mediod_indices)
     while changed:
-        dissimilarity_mediods = np.array([ dissimilarity[mediod_index] for mediod_index in mediod_indices]).transpose()
-        cluster_indices = np.argmin(dissimilarity_mediods, axis=1)
+        dissimilarity_medoids = np.array([ dissimilarity[mediod_index] for mediod_index in mediod_indices]).transpose()
+        cluster_indices = np.argmin(dissimilarity_medoids, axis=1)
         new_mediod_indices = np.zeros(mediod_indices.shape)
 
         for i in range(len(mediod_indices)):
@@ -59,17 +59,17 @@ for mean, cluster in zip(cluster_means, clusters):
     mnist_load_show.visualize(np.insert(cluster, 0, mean, axis=0))
 
 distances = distance.cdist(X, X, 'euclidean')
-cluster_mediods_indices, clusters_indices = k_mediods(distances, list(range(10)))
-cluster_mediods = np.array([X[int(i)] for i in cluster_mediods_indices])
+cluster_medoids_indices, clusters_indices = k_medoids(distances, list(range(10)))
+cluster_medoids = np.array([X[int(i)] for i in cluster_medoids_indices])
 clusters = np.array([ X[clusters_indices == i] for i in range(10) ])
-mnist_load_show.visualize(cluster_mediods)
-for mediod, cluster in zip(cluster_mediods, clusters):
+mnist_load_show.visualize(cluster_medoids)
+for mediod, cluster in zip(cluster_medoids, clusters):
     mnist_load_show.visualize(np.insert(cluster, 0, mediod, axis=0))
 
 mediod_indices = [ np.where(Y == i)[0][0] for i in range(10) ]
-cluster_mediods_indices, clusters_indices = k_mediods(distances, mediod_indices)
-cluster_mediods = np.array([X[int(i)] for i in cluster_mediods_indices])
+cluster_medoids_indices, clusters_indices = k_medoids(distances, mediod_indices)
+cluster_medoids = np.array([X[int(i)] for i in cluster_medoids_indices])
 clusters = np.array([ X[clusters_indices == i] for i in range(10) ])
-mnist_load_show.visualize(cluster_mediods)
-for mediod, cluster in zip(cluster_mediods, clusters):
+mnist_load_show.visualize(cluster_medoids)
+for mediod, cluster in zip(cluster_medoids, clusters):
     mnist_load_show.visualize(np.insert(cluster, 0, mediod, axis=0))
